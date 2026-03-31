@@ -1,5 +1,5 @@
 PYTHON = python3
-MAIN = a_maze_ing.py
+MAIN = main.py
 CONFIG = config.txt
 REQUIREMENTS = requirements.txt
 

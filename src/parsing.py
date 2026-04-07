@@ -8,6 +8,7 @@ def parsing(filename: str):
     color = "none"
     max_drones = 1
     max_link_capacity = 1
+    check_name_zone = []
     try:
         with open(filename, 'r') as file:
             for number_line, line in enumerate(file, start=1):
@@ -95,12 +96,13 @@ def parsing(filename: str):
                         main_part = line.strip()
                     main_part_data = main_part.split(":")
                     main_part_data_lst = main_part_data[1].strip().split(" ")
-                    if main_part_data_lst[0] in file:
-                        return f"ERROR line {number_line}: name zone already used."
-                    elif not main_part_data_lst[0].isalnum():
+                    if main_part_data_lst[0] in check_name_zone:
+                       return f"ERROR line {number_line}: name zone already used."
+                    if not main_part_data_lst[0].isalnum():
                         return f"ERROR line {number_line}: name's zone containts invalid charaters." 
                     else:
                         name = main_part_data_lst[0]
+                        check_name_zone.append(name)
                     try:
                         x = int(main_part_data_lst[1])
                         y = int(main_part_data_lst[2])

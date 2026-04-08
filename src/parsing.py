@@ -1,5 +1,4 @@
-
-class parse:
+class parser:
     def __init__(self, filename):
         self.filename = filename
 
@@ -182,6 +181,7 @@ class parse:
                     return (f"ERROR line {number_line}: should be one end_hub.")
         except FileNotFoundError as e:
             return f"ERROR {e}"
-        
+    
 if __name__ == '__main__':
-    print(parsing("test.txt"))
+    parseA = parser('test.txt')
+    print(parseA.parsing())

@@ -4,19 +4,19 @@ def parsing(filename: str):
     count_start_hub = 0
     count_end_hub = 0
     lst_zone = ["normal", "blocked", "restricted", "priority"]
-    zone = "normal"
-    color = "none"
-    max_drones = 1
-    max_link_capacity = 1
-    check_name_zone = []
-    name_zone = "none"
-    x = 0
-    y = 0
-    connexion_from = "none"
-    connexion_to = "none"
     try:
         with open(filename, 'r') as file:
             for number_line, line in enumerate(file, start=1):
+                zone = "normal"
+                color = "none"
+                max_drones = 1
+                max_link_capacity = 1
+                check_name_zone = []
+                name_zone = "none"
+                x = 0
+                y = 0
+                connexion_from = "none"
+                connexion_to = "none"
                 if line.strip().startswith('#'):
                     continue
                 if not check_first_line:
@@ -103,10 +103,10 @@ def parsing(filename: str):
                         main_part = line.strip()
                     main_part_data = main_part.split(":")
                     main_part_data_lst = main_part_data[1].strip().split(" ")
-                    if len(main_part_data_lst) > 3:
+                    if len(main_part_data_lst) != 3:
                         return f"ERROR line {number_line}: should only name's zone, x and y."
                     if main_part_data_lst[0] in check_name_zone:
-                       return f"ERROR line {number_line}: name zone already used."
+                        return f"ERROR line {number_line}: name zone already used."
                     if not main_part_data_lst[0].isalnum():
                         return f"ERROR line {number_line}: name's zone containts invalid charaters." 
                     else:
@@ -156,7 +156,7 @@ def parsing(filename: str):
                         main_part = line.strip()
                     main_part_data = main_part.split(":")
                     main_part_data_lst = main_part_data[1].strip().split("-")
-                    if len(main_part_data_lst) > 2:
+                    if len(main_part_data_lst) != 2:
                         return f"ERROR line {number_line}: should only connexion between two zones."
                     if (main_part_data_lst[0] not in check_name_zone 
                         or main_part_data_lst[1] not in check_name_zone):

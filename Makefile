@@ -1,7 +1,7 @@
 PYTHON = python3
 MAIN = main.py
-CONFIG = config.txt
 REQUIREMENTS = requirements.txt
+CONFIG = config.py
 
 all: run
 
@@ -15,24 +15,18 @@ debug:
 	$(PYTHON) -m pdb $(MAIN) $(CONFIG)
 
 clean:
-	rm -rf .mypy_cache .pytest_cache .DS_Store mazegen/.DS_Store
+	rm -rf .mypy_cache .pytest_cache .DS_Store
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
 
 lint:
-	python3 -m flake8
-	python3 -m mypy --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --explicit-package-bases .
+	$(PYTHON) -m flake8 .
+	$(PYTHON) -m mypy --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs .
 
 lint-strict:
-	python3 -m flake8
-	python3 -m mypy --strict --explicit-package-bases .
+	$(PYTHON) -m flake8 .
+	$(PYTHON) -m mypy --strict .
 
-build:
-	$(PYTHON) -m pip install --upgrade build
-	$(PYTHON) -m build
 
-install-pkg: build
-	$(PYTHON) -m pip install dist/*.whl
-
-.PHONY: all install run debug clean lint lint-strict build install-pkg
+.PHONY: all install run debug clean lint lint-strict

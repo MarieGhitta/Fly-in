@@ -1,0 +1,9 @@
+nombre max de drones ? 
+
+seen_connections = set()
+
+edge = tuple(sorted((connexion_from, connexion_to)))
+
+if edge in seen_connections:
+    return f"ERROR line {number_line}: duplicate connection."
+seen_connections.add(edge)

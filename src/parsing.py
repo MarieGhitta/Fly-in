@@ -1,27 +1,32 @@
 class parser:
     def __init__(self, filename):
         self.filename = filename
+        self.drone_count = []
+        self.check_name_zone = []
+        self.zone = "normal"
+        self.color = "none"
+        self.max_drones = 1
+        self.max_link_capacity = 1
+        self.name_zone = "none"
 
     def parsing(self):
-        drone_count = []
         check_first_line = False
+        lst_zone = ["normal", "blocked", "restricted", "priority"]
+        seen_connexion = []
         count_start_hub = 0
         count_end_hub = 0
-        lst_zone = ["normal", "blocked", "restricted", "priority"]
-        check_name_zone = []
-        seen_connexion = []
         try:
             with open(self.filename, 'r') as file:
                 for number_line, line in enumerate(file, start=1):
-                    zone = "normal"
-                    color = "none"
-                    max_drones = 1
-                    max_link_capacity = 1
-                    name_zone = "none"
-                    x = 0
-                    y = 0
-                    connexion_from = "none"
-                    connexion_to = "none"
+                    self.zone = "normal"
+                    self.color = "none"
+                    self.max_drones = 1
+                    self.max_link_capacity = 1
+                    self.name_zone = "none"
+                    self.x = 0
+                    self.y = 0
+                    self.connexion_from = "none"
+                    self.connexion_to = "none"
                     if line.strip().startswith('#'):
                         continue
                     if not check_first_line:
@@ -30,9 +35,9 @@ class parser:
                             if ":" not in line:
                                 return (f"ERROR line {number_line}: format is not correct. "
                                         "Should be like this: 'nb_drones: <int>'")
-                            drone_count = line.split(":")
+                            self.drone_count = line.split(":")
                             try:
-                                ndrones = int(drone_count[1])
+                                ndrones = int(self.drone_count[1])
                             except ValueError:
                                 return f"ERROR {number_line}: must be integer."
                             if ndrones <= 0:
@@ -80,7 +85,7 @@ class parser:
                                 if key == 'zone':
                                     if value not in lst_zone:
                                         return f"ERROR line {number_line}: invalid zone."
-                                    zone = value
+                                    self.zone = value
                                 if key == "max_drones":
                                     try:
                                         n = int(metadata_dct["max_drones"])
@@ -88,7 +93,7 @@ class parser:
                                             return f"ERROR line {number_line}: max_drones value should be a positif integer."
                                     except ValueError:
                                         return (f"ERROR line {number_line}: max_drones value should be an integer.")
-                                    max_drones = value
+                                    self.max_drones = value
                                 if key == "max_link_capacity":
                                     try:
                                         n = int(metadata_dct["max_link_capacity"])
@@ -96,11 +101,11 @@ class parser:
                                             return f"ERROR line {number_line}: max_link_capacity value should be a positif integer."
                                     except ValueError:
                                         return (f"ERROR line {number_line}: max_link_capacity value should be an integer.")
-                                    max_link_capacity = value
+                                    self.max_link_capacity = value
                                 if key == "color":
                                     if not value.isalpha():
                                         return f"ERROR line {number_line}: color name should be a valid color in one word."
-                                    color = value
+                                    self.color = value
                             main_part = line[:pos1].strip()
                         else:
                             main_part = line.strip()
@@ -108,19 +113,19 @@ class parser:
                         main_part_data_lst = main_part_data[1].strip().split(" ")
                         if len(main_part_data_lst) != 3:
                             return f"ERROR line {number_line}: should only name's zone, x and y."
-                        if main_part_data_lst[0] in check_name_zone:
+                        if main_part_data_lst[0] in self.check_name_zone:
                             return f"ERROR line {number_line}: name zone already used."
                         if not main_part_data_lst[0].isalnum():
                             return f"ERROR line {number_line}: name's zone containts invalid charaters." 
                         else:
-                            name_zone = main_part_data_lst[0]
-                            check_name_zone.append(name_zone)
+                            self.name_zone = main_part_data_lst[0]
+                            self.check_name_zone.append(self.name_zone)
                         try:
-                            x = int(main_part_data_lst[1])
-                            y = int(main_part_data_lst[2])
+                            self.x = int(main_part_data_lst[1])
+                            self.y = int(main_part_data_lst[2])
                         except ValueError:
                             return f"ERROR line {number_line}: coordinates should be interger."
-                        print(name_zone, x, y, zone, color, max_drones)
+                        print(self.name_zone, self.x, self.y, self.zone, self.color, self.max_drones)
                     if line.strip().startswith("connection"):
                         if ":" not in line:
                             return (f"ERROR line {number_line}: format is not correct, "
@@ -152,7 +157,7 @@ class parser:
                                             return f"ERROR line {number_line}: max_link_capacity value should be a positif integer."
                                     except ValueError:
                                         return (f"ERROR line {number_line}: max_link_capacity value should be an integer.")
-                                    max_link_capacity = value                             
+                                    self.max_link_capacity = value                             
                             main_part = line[:pos1].strip()
                         else:
                             main_part = line.strip()
@@ -160,27 +165,28 @@ class parser:
                         main_part_data_lst = main_part_data[1].strip().split("-")
                         if len(main_part_data_lst) != 2:
                             return f"ERROR line {number_line}: should only have connexion between two zones."
-                        if (main_part_data_lst[0] not in check_name_zone 
-                            or main_part_data_lst[1] not in check_name_zone):
+                        if (main_part_data_lst[0] not in self.check_name_zone 
+                            or main_part_data_lst[1] not in self.check_name_zone):
                             return f"ERROR line {number_line}: unknown zone."
                         if (not main_part_data_lst[0].isalnum() 
                             or not main_part_data_lst[1].isalnum()):
                             return f"ERROR line {number_line}: name's zone containts invalid charaters." 
                         else:
-                            connexion_from = main_part_data_lst[0]
-                            connexion_to = main_part_data_lst[1]
-                        check_dup = {connexion_from, connexion_to}
+                            self.connexion_from = main_part_data_lst[0]
+                            self.connexion_to = main_part_data_lst[1]
+                        check_dup = {self.connexion_from, self.connexion_to}
                         if check_dup in seen_connexion:
                             return f"ERROR line {number_line}: a connexion cannot exist twice."
                         else:
                             seen_connexion.append(check_dup)
-                        print(connexion_from, connexion_to, max_link_capacity)
+                        print(self.connexion_from, self.connexion_to, self.max_link_capacity)
                 if count_start_hub == 0:
                     return (f"ERROR line {number_line}: should be one start_hub.")
-                if count_end_hub == 0:
+                if count_start_hub == 0:
                     return (f"ERROR line {number_line}: should be one end_hub.")
         except FileNotFoundError as e:
             return f"ERROR {e}"
+        return 
     
 if __name__ == '__main__':
     parseA = parser('test.txt')

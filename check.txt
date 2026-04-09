@@ -1,9 +1,50 @@
 nombre max de drones ? 
 
-seen_connections = set()
+def build_graph(connections):
+    graph = {}
 
-edge = tuple(sorted((connexion_from, connexion_to)))
+    for conn in connections:
+        a = conn["from"]
+        b = conn["to"]
 
-if edge in seen_connections:
-    return f"ERROR line {number_line}: duplicate connection."
-seen_connections.add(edge)
+        if a not in graph:
+            graph[a] = []
+        if b not in graph:
+            graph[b] = []
+
+        graph[a].append(b)
+        graph[b].append(a)
+
+    return graph
+
+class Graph:
+    def __init__(self, zones, connections):
+        self.zones = zones
+        self.connections = connections
+        self.adjacency = {}
+        self.build_graph()
+
+    def build_graph(self):
+        for zone_name in self.zones:
+            self.adjacency[zone_name] = []
+
+        for connection in self.connections:
+            zone1 = connection["from"]
+            zone2 = connection["to"]
+
+            self.adjacency[zone1].append(zone2)
+            self.adjacency[zone2].append(zone1)
+
+    def get_neighbors(self, zone_name):
+        return self.adjacency.get(zone_name, [])
+    
+    class Drone:
+    def __init__(self, id, position):
+        self.id = id
+        self.position = position
+        self.path = []
+        self.status = "moving"
+
+
+
+

@@ -13,9 +13,9 @@ graph = Graph(zones, connections)
 
 pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
-path = pathfinder.find_shortest_path()
+path = pathfinder.find_multiple_paths()
 
 simulation = Simulation(path, 3)
-
-
+simulation.add_drones_per_path()
+simulation.run()
 

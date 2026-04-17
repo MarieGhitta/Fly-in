@@ -8,7 +8,9 @@ class Pathfinder:
         self.start = start
         self.end = end
         
-    def find_shortest_path(self) -> list:
+    def find_shortest_path(self, usage: dict[str, int] | None = None) -> list:
+        if usage is None:
+            usage = {}
         distance = {}
         non_visited = []
         parents = {}
@@ -34,6 +36,7 @@ class Pathfinder:
                     neighbors_cost = 1
                 elif self.zones[neighbors]["zone"] == "restricted":
                     neighbors_cost = 2
+                neighbors_cost += usage.get(neighbors, 0)
                 new_cost = min_cost + neighbors_cost
                 if new_cost < distance[neighbors]:
                     distance[neighbors] = new_cost
@@ -46,6 +49,18 @@ class Pathfinder:
             current = parents[current]
         path.append(self.start)
         return path[::-1]
+    
+    def find_multiple_paths(self) -> list[list]:
+        paths = []
+        usage = {}
+        while len(paths) < 5:
+            path = self.find_shortest_path(usage)
+            if path in paths:
+                break
+            paths.append(path)
+            for zone in path:
+                usage[zone] = usage.get(zone, 0) + 1
+        return paths
 
 
 

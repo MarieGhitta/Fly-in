@@ -28,7 +28,7 @@ class Parser:
                     connexion_from = "none"
                     connexion_to = "none"
                     stripped_line = line.strip()
-                    if stripped_line.startswith('#'):
+                    if not stripped_line or stripped_line.startswith('#'):
                         continue
                     if not check_first_line:
                         if stripped_line.startswith('nb_drones'):
@@ -201,8 +201,4 @@ class Parser:
                 "zones": self.zones,
                 "connections": self.connections,
             }
-    
-if __name__ == '__main__':
-    parseA = Parser('test.txt')
-    result = parseA.parsing()
-    print(result)
+

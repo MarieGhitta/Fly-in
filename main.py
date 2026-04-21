@@ -3,22 +3,28 @@ from src.graph import Graph
 from src.pathfinder import Pathfinder
 from src.simulation import Simulation
 
-parser = Parser("maps/challenger/01_the_impossible_dream.txt")
-result = parser.parsing()
 
-if isinstance(result, str):
-    print(result)
-    exit()
-zones = result["zones"]
-connections = result["connections"]
+def main():
+    try:
+        parser = Parser("maps/challenger/01_the_impossible_dream.txt")
+        result = parser.parsing()
 
-graph = Graph(zones, connections)
+        zones = result["zones"]
+        connections = result["connections"]
 
-pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
+        graph = Graph(zones, connections)
 
-path = pathfinder.find_multiple_paths()
+        pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
-simulation = Simulation(graph, path, parser.drone_count)
-simulation.add_drones_per_path()
-simulation.run()
+        path = pathfinder.find_multiple_paths()
+
+        simulation = Simulation(graph, path, parser.drone_count)
+        simulation.add_drones_per_path()
+        simulation.run()
+    except Exception as e:
+        print(e)
+
+
+if __name__ == '__main__':
+    main()
 

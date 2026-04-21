@@ -41,6 +41,9 @@ class Pathfinder:
                 if new_cost < distance[neighbors]:
                     distance[neighbors] = new_cost
                     parents[neighbors] = current_zone
+                elif new_cost == distance[neighbors]:
+                    if self.zones[neighbors]["zone"] == "priority":
+                        parents[neighbors] = current_zone
             index = non_visited.index(current_zone)
             non_visited.pop(index)
         current = self.end

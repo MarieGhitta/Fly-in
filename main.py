@@ -22,10 +22,10 @@ def main():
 
         pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
-        path = pathfinder.find_multiple_paths()
+        path = pathfinder.find_shortest_path()
 
         simulation = Simulation(graph, path, parser.drone_count)
-        simulation.add_drones_per_path()
+        simulation.add_drones()
         simulation.run()
     except Exception as e:
         print(e)

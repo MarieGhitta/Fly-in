@@ -10,7 +10,7 @@ install:
 
 run:
 	@map=$$(find maps -name "*.txt" | sort | gum choose); \
-	$(PYTHON) $(MAIN) $$map
+	$(PYTHON) $(MAIN) $$map $ARGS
 
 debug:
 	@map=$$(find maps -name "*.txt" | sort | gum choose); \

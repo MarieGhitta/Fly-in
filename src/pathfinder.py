@@ -53,14 +53,3 @@ class Pathfinder:
         path.append(self.start)
         return path[::-1]
 
-    def find_multiple_paths(self) -> list[list]:
-        paths = []
-        usage = {}
-        while len(paths) < 5:
-            path = self.find_shortest_path(usage)
-            if path in paths:
-                break
-            paths.append(path)
-            for zone in path:
-                usage[zone] = usage.get(zone, 0) + 1
-        return paths

@@ -18,8 +18,33 @@ src/pathfinder.py:57: error: Need type annotation for "paths" (hint: "paths: lis
 src/pathfinder.py:58: error: Need type annotation for "usage" (hint: "usage: dict[<type>, <type>] = ...")  [var-annotated]
 Found 5 errors in 2 files (checked 1 source file)
 
-make:
-comment on est sense ouvrir le ficher ?
+live:
+        class Simulation:
+    def __init__(self, graph: Graph, path: list, nb_drones: int, show_occupency=False):
+        self.graph = graph
+        self.path = path
+        self.nb_drones = nb_drones
+        self.drones = []
+        self.show_occupency = show_occupency
+
+            occupency = {}
+            for drone in self.drones:
+                zone = drone.path[drone.current_position]
+                occupency[zone] = occupency.get(zone, 0) + 1
+            for key, value in occupency.items():
+                print(f"[{key}: {value}]")
+
+main: 
+            show_occupency = "--show-occupancy" in sys.argv
+                  simulation = Simulation(graph, path, parser.drone_count, show_occupency)
+
+run:
+	@map=$$(find maps -name "*.txt" | sort | gum choose); \
+	$(PYTHON) $(MAIN) $$map $ARGS
+
+debug:
+	@map=$$(find maps -name "*.txt" | sort | gum choose); \
+	$(PYTHON) -m pdb $(MAIN) $$map
 
 
 

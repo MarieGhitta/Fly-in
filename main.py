@@ -2,11 +2,17 @@ from src.parsing import Parser
 from src.graph import Graph
 from src.pathfinder import Pathfinder
 from src.simulation import Simulation
+import sys
 
 
 def main():
     try:
-        parser = Parser("maps/challenger/01_the_impossible_dream.txt")
+        if len(sys.argv) < 2:
+            raise ValueError("ERROR: missing map file")
+
+        filename = sys.argv[1]
+
+        parser = Parser(filename)
         result = parser.parsing()
 
         zones = result["zones"]

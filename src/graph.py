@@ -12,13 +12,12 @@ class Graph:
             elif self.zones[name_zone]["hub_type"] == "end_hub":
                 self.end = name_zone
             self.adjacency_list[name_zone] = []
-        
         for connection in self.connections:
             name_from = connection["from"]
             name_to = connection["to"]
-            if self.zones[name_from]["zone"] == "blocked" or self.zones[name_to]["zone"] == "blocked":
+            if (self.zones[name_from]["zone"] == "blocked"
+               or self.zones[name_to]["zone"] == "blocked"):
                 continue
             else:
                 self.adjacency_list[name_from].append(name_to)
                 self.adjacency_list[name_to].append(name_from)
-

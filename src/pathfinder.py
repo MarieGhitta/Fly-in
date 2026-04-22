@@ -7,7 +7,7 @@ class Pathfinder:
         self.zones = zones
         self.start = start
         self.end = end
-        
+
     def find_shortest_path(self, usage: dict[str, int] | None = None) -> list:
         if usage is None:
             usage = {}
@@ -32,7 +32,7 @@ class Pathfinder:
                 break
             for neighbors in self.graph.adjacency_list[current_zone]:
                 if (self.zones[neighbors]["zone"] == "normal" or
-                    self.zones[neighbors]["zone"] == "priority"):
+                   self.zones[neighbors]["zone"] == "priority"):
                     neighbors_cost = 1
                 elif self.zones[neighbors]["zone"] == "restricted":
                     neighbors_cost = 2
@@ -52,7 +52,7 @@ class Pathfinder:
             current = parents[current]
         path.append(self.start)
         return path[::-1]
-    
+
     def find_multiple_paths(self) -> list[list]:
         paths = []
         usage = {}
@@ -64,6 +64,3 @@ class Pathfinder:
             for zone in path:
                 usage[zone] = usage.get(zone, 0) + 1
         return paths
-
-
-

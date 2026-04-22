@@ -1,50 +1,25 @@
-nombre max de drones ? 
+simulation:
+return simultion ? 
+Quand  print ?
+src/graph.py:5: error: Need type annotation for "adjacency_list" (hint: "adjacency_list: dict[<type>, <type>] = ...")  [var-annotated]
+src/simulation.py:10: error: Need type annotation for "drones_per_path" (hint: "drones_per_path: list[<type>] = ...")  [var-annotated]
+src/simulation.py:44: error: Need type annotation for "positions_reserved" (hint: "positions_reserved: dict[<type>, <type>] = ...")  [var-annotated]
+src/simulation.py:46: error: Need type annotation for "link_usage" (hint: "link_usage: dict[<type>, <type>] = ...")  [var-annotated]
 
-def build_graph(connections):
-    graph = {}
+check 1 chemin
 
-    for conn in connections:
-        a = conn["from"]
-        b = conn["to"]
+graph:
+type_hint : self.adjacency_list = {}
 
-        if a not in graph:
-            graph[a] = []
-        if b not in graph:
-            graph[b] = []
+pathfinder:
+src/pathfinder.py:22: error: Incompatible types in assignment (expression has type "float", target has type "int")  [assignment]
+src/pathfinder.py:42: error: Incompatible types in assignment (expression has type "float", target has type "int")  [assignment]
+src/pathfinder.py:57: error: Need type annotation for "paths" (hint: "paths: list[<type>] = ...")  [var-annotated]
+src/pathfinder.py:58: error: Need type annotation for "usage" (hint: "usage: dict[<type>, <type>] = ...")  [var-annotated]
+Found 5 errors in 2 files (checked 1 source file)
 
-        graph[a].append(b)
-        graph[b].append(a)
-
-    return graph
-
-class Graph:
-    def __init__(self, zones, connections):
-        self.zones = zones
-        self.connections = connections
-        self.adjacency = {}
-        self.build_graph()
-
-    def build_graph(self):
-        for zone_name in self.zones:
-            self.adjacency[zone_name] = []
-
-        for connection in self.connections:
-            zone1 = connection["from"]
-            zone2 = connection["to"]
-
-            self.adjacency[zone1].append(zone2)
-            self.adjacency[zone2].append(zone1)
-
-    def get_neighbors(self, zone_name):
-        return self.adjacency.get(zone_name, [])
-    
-    class Drone:
-    def __init__(self, id, position):
-        self.id = id
-        self.position = position
-        self.path = []
-        self.status = "moving"
-
+make:
+comment on est sense ouvrir le ficher ?
 
 
 

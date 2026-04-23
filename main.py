@@ -7,12 +7,12 @@ import sys
 
 def main():
     try:
-        if len(sys.argv) < 2:
-            raise ValueError("ERROR: missing map file")
+        # if len(sys.argv) < 2:
+            # raise ValueError("ERROR: missing map file")
 
-        filename = sys.argv[1]
+        # filename = sys.argv[1]
 
-        parser = Parser(filename)
+        parser = Parser("maps/challenger/01_the_impossible_dream.txt")
         result = parser.parsing()
 
         zones = result["zones"]

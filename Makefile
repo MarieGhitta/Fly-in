@@ -1,4 +1,4 @@
-PYTHON = python3.14
+PYTHON = python3
 MAIN = main.py
 REQUIREMENTS = requirements.txt
 CONFIG = config.py
@@ -10,7 +10,7 @@ install:
 
 run:
 	@map=$$(find maps -name "*.txt" | sort | gum choose); \
-	$(PYTHON) $(MAIN) $$map $ARGS
+	$(PYTHON) $(MAIN) $$map
 
 debug:
 	@map=$$(find maps -name "*.txt" | sort | gum choose); \

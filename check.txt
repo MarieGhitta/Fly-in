@@ -104,3 +104,4 @@ def run_visualization(graph, turns):
         clock.tick(60)
     pygame.quit()
 
+nombre drone / capacite max

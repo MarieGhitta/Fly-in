@@ -2,6 +2,7 @@ from src.parsing import Parser
 from src.graph import Graph
 from src.pathfinder import Pathfinder
 from src.simulation import Simulation
+from src.visualization import Visualization
 import sys
 
 
@@ -26,7 +27,11 @@ def main():
 
         simulation = Simulation(graph, path, parser.drone_count)
         simulation.add_drones()
-        simulation.run()
+        turns = simulation.run()
+
+        viz = Visualization(graph, turns)
+        viz.show()
+
     except Exception as e:
         print(e)
 

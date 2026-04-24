@@ -30,6 +30,7 @@ class Simulation:
 
     def run(self) -> list:
         count_turn = 0
+        turns = []
         while True:
             count_turn += 1
             finished = True
@@ -70,5 +71,7 @@ class Simulation:
                 break
             if moves:
                 print(" ".join(moves))
+                turns.append(moves.copy())
         print(f"Total turns: {count_turn}")
-        return self.drones
+        return turns
+    

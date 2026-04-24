@@ -31,10 +31,11 @@ class Visualization:
         return go.Scatter(
             x=x,
             y=y,
-            mode="markers+text",
+            mode="markers",
             text=labels,
+            opacity=0.5,
             textposition="top center",
-            marker=dict(size=12, color=colors),
+            marker=dict(size=40, color=colors),
             name="zones"
         )
     
@@ -55,7 +56,7 @@ class Visualization:
             x=edge_x,
             y=edge_y,
             mode="lines",
-            line=dict(width=2, color="gray"),
+            line=dict(width=5, color="gray"),
             hoverinfo="none",
             name="Connections"
         )
@@ -86,9 +87,10 @@ class Visualization:
                             x=x,
                             y=y,
                             mode="markers+text",
+                            opacity=1,
                             text=labels,
                             textposition="top center",
-                            marker=dict(size=10, color="white"),
+                            marker=dict(size=10, color="white", symbol='diamond'),
                             name="Drones"
                         )
                     ]
@@ -120,7 +122,7 @@ class Visualization:
                     {
                         "label": "Play",
                         "method": "animate",
-                        "args": [None, {"frame": {"durations": 800}}]
+                        "args": [None, {"frame": {"durations": 300}}]
                     }
                 ]
             }]

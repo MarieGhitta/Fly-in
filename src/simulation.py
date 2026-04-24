@@ -74,4 +74,3 @@ class Simulation:
                 turns.append(moves.copy())
         print(f"Total turns: {count_turn}")
         return turns
-    

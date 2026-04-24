@@ -31,13 +31,17 @@ class Pathfinder:
             if min_cost == float("inf"):
                 break
             for neighbors in self.graph.adjacency_list[current_zone]:
-                if (self.zones[neighbors]["zone"] == "normal" or
-                   self.zones[neighbors]["zone"] == "priority"):
+                if self.zones[neighbors]["zone"] == "normal":
                     neighbors_cost = 1
+                    bonus_priority = 0
+                elif self.zones[neighbors]["zone"] == "priority":
+                    neighbors_cost = 1
+                    bonus_priority = -0.1
                 elif self.zones[neighbors]["zone"] == "restricted":
                     neighbors_cost = 2
+                    bonus_priority = 0
                 neighbors_cost += usage.get(neighbors, 0)
-                new_cost = min_cost + neighbors_cost
+                new_cost = min_cost + neighbors_cost + bonus_priority
                 if new_cost < distance[neighbors]:
                     distance[neighbors] = new_cost
                     parents[neighbors] = current_zone

@@ -3,9 +3,10 @@ from src.graph import Graph
 
 
 class Visualization:
-    def __init__(self, graph: Graph, turns: list):
+    def __init__(self, graph: Graph, turns: list, filename: str):
         self.graph = graph
         self.turns = turns
+        self.filename = filename
     
     def _build_nodes(self):
         x = []
@@ -19,21 +20,26 @@ class Visualization:
             labels.append(name)
 
             # couleur selon le type
-            if data["hub_type"] == "start_hub":
-                colors.append("green")
-            elif data["hub_type"] == "end_hub":
-                colors.append("yellow")
-            elif data["zone"] == "restricted":
-                colors.append("red")
+            if data["color"] != "none":
+                colors.append(data["color"])
             else:
-                colors.append("blue")
+                if data["hub_type"] == "start_hub":
+                    colors.append("green")
+                elif data["hub_type"] == "end_hub":
+                    colors.append("yellow")
+                elif data["zone"] == "restricted":
+                    colors.append("red")
+                else:
+                    colors.append("blue")
         
         return go.Scatter(
             x=x,
             y=y,
             mode="markers",
             text=labels,
-            opacity=0.5,
+            hovertext=labels,
+            hoverinfo="text",
+            opacity=0.8,
             textposition="top center",
             marker=dict(size=40, color=colors),
             name="zones"
@@ -56,21 +62,68 @@ class Visualization:
             x=edge_x,
             y=edge_y,
             mode="lines",
-            line=dict(width=5, color="gray"),
+            line=dict(width=3, color="gray"),
             hoverinfo="none",
             name="Connections"
         )
     
     def _build_frame(self):
-        drone_positions = {}
         frames = []
+        drone_positions = {}
+        start = self.graph.start
 
+        drone_ids = set()
         for turn in self.turns:
             # appliquer les mouvements
             for move in turn:
+                drone, _ = move.split("-")
+                drone_ids.add(drone)
+
+        drone_positions = {drone: start for drone in drone_ids}
+        
+        x = []
+        y = []
+        labels = []
+
+        for drone, zone in drone_positions.items():
+            x.append(self.graph.zones[zone]["x"])
+            y.append(self.graph.zones[zone]["y"])
+            labels.append(f"<b>{drone}</b>")
+    
+        frames.append(
+            go.Frame(
+                name="0",
+                data=[
+                    go.Scatter(
+                        x=x,
+                        y=y,
+                        mode="markers+text",
+                        text=labels,
+                        textposition="top center",
+                        textfont=dict(
+                            size=16,
+                            color="black"
+                        ),
+                        marker=dict(size=10, 
+                                    color="white", 
+                                    symbol='diamond',
+                                    line=dict(width=2,
+                                              color="black"))
+                    )
+                ],
+                traces=[2]
+            )
+        )
+
+        for turn in self.turns:
+            restricted_hit = False
+            for move in turn:
                 drone, zone = move.split("-")
                 drone_positions[drone] = zone
-        
+
+                if self.graph.zones[zone]["zone"] == "restricted":
+                    restricted_hit = True
+            
             x = []
             y = []
             labels = []
@@ -79,23 +132,32 @@ class Visualization:
                 x.append(self.graph.zones[zone]["x"])
                 y.append(self.graph.zones[zone]["y"])
                 labels.append(drone)
-        
-            frames.append(
-                go.Frame(
+                   
+            frame = go.Frame(
+                    name=str(len(frames)),
                     data=[
                         go.Scatter(
                             x=x,
                             y=y,
                             mode="markers+text",
-                            opacity=1,
                             text=labels,
                             textposition="top center",
-                            marker=dict(size=10, color="white", symbol='diamond'),
-                            name="Drones"
+                            textfont=dict(
+                                size=16,
+                                color="black"
+                            ),
+                            marker=dict(size=10, 
+                                        color="white", 
+                                        symbol='diamond',
+                                        line=dict(width=2, color="black"))
                         )
-                    ]
+                    ],
+                    traces=[2]
                 )
-            )
+
+            frames.append(frame)
+            if restricted_hit:
+                frames.append(frame)
 
         return frames
     
@@ -112,7 +174,7 @@ class Visualization:
         )
 
         fig.update_layout(
-            title="Drone Simulation",
+            title=f"Drone Simulation - {self.filename}",
             showlegend=False,
             xaxis=dict(showgrid=False, zeroline=False),
             yaxis=dict(showgrid=False, zeroline=False),
@@ -122,9 +184,27 @@ class Visualization:
                     {
                         "label": "Play",
                         "method": "animate",
-                        "args": [None, {"frame": {"durations": 300}}]
+                        "args": [None, {"frame": {"duration": 1000}}]
                     }
                 ]
+            }],
+            sliders=[{
+                "active":0,
+                "currentvalue": {"prefix": "Turn: "},
+                "steps": [
+                    {
+                        "method": "animate",
+                        "label": f"{i}",
+                        "args": [
+                            [frame.name],
+                            {"frame": {"duration": 300}, "mode": "immediate"}
+                        ]
+                    }
+                    for i, frame in enumerate(frames)
+                ]
             }]
+
         )
+
+
         fig.show()

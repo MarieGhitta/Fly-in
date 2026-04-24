@@ -21,3 +21,4 @@ class Graph:
             else:
                 self.adjacency_list[name_from].append(name_to)
                 self.adjacency_list[name_to].append(name_from)
+

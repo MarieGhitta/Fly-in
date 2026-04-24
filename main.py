@@ -8,12 +8,12 @@ import sys
 
 def main():
     try:
-        # if len(sys.argv) < 2:
-            # raise ValueError("ERROR: missing map file")
+        if len(sys.argv) < 2:
+            raise ValueError("ERROR: missing map file")
 
-        # filename = sys.argv[1]
+        filename = sys.argv[1]
 
-        parser = Parser("maps/challenger/01_the_impossible_dream.txt")
+        parser = Parser(filename)
         result = parser.parsing()
 
         zones = result["zones"]
@@ -29,7 +29,7 @@ def main():
         simulation.add_drones()
         turns = simulation.run()
 
-        viz = Visualization(graph, turns)
+        viz = Visualization(graph, turns, filename)
         viz.show()
 
     except Exception as e:

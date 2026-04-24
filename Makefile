@@ -1,4 +1,4 @@
-PYTHON = python3
+PYTHON = python3.14
 MAIN = main.py
 REQUIREMENTS = requirements.txt
 CONFIG = config.py

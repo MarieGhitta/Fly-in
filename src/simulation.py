@@ -32,7 +32,6 @@ class Simulation:
         count_turn = 0
         turns = []
         while True:
-            count_turn += 1
             finished = True
             positions_reserved = {}
             moves = []
@@ -69,6 +68,7 @@ class Simulation:
                         link_usage[link] = link_usage.get(link, 0) + 1
             if finished:
                 break
+            count_turn += 1
             if moves:
                 print(" ".join(moves))
                 turns.append(moves.copy())

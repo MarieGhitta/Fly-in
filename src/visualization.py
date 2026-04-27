@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+from plotly.colors import validate_colors
 from src.graph import Graph
 
 
@@ -14,14 +15,28 @@ class Visualization:
         labels = []
         colors = []
 
-        for name, data in self.graph.zones.items():
+        for i, (name, data) in enumerate(self.graph.zones.items()):
             x.append(data["x"])
             y.append(data["y"])
             labels.append(name)
 
-            # couleur selon le type
-            if data["color"] != "none":
-                colors.append(data["color"])
+            RAINBOW = ["red", "orange", "yellow", "green", "blue", "purple"]
+            
+            color = data["color"].lower()
+
+            if color != "none":
+
+                # 👇 1. gérer explicitement rainbow AVANT tout
+                if color == "rainbow":
+                    colors.append(RAINBOW[i % len(RAINBOW)])
+
+                else:
+                    try:
+                        validate_colors([color])
+                        colors.append(color)
+                    except ValueError:
+                        colors.append("gray")
+
             else:
                 if data["hub_type"] == "start_hub":
                     colors.append("green")

@@ -8,18 +8,18 @@ class Pathfinder:
         self.start = start
         self.end = end
 
-    def find_shortest_path(self, usage: dict[str, int] | None = None) -> list:
-        if usage is None:
-            usage = {}
+    def find_shortest_path(self) -> list:
         distance = {}
         non_visited = []
         parents = {}
         path = []
+        passed_priority = {}
         for name_zone in self.zones:
             if name_zone == self.start:
                 distance[name_zone] = 0
             else:
                 distance[name_zone] = float("inf")
+            passed_priority[name_zone] = False
             non_visited.append(name_zone)
         while non_visited:
             min_cost = float("inf")
@@ -33,24 +33,27 @@ class Pathfinder:
             for neighbors in self.graph.adjacency_list[current_zone]:
                 if self.zones[neighbors]["zone"] == "normal":
                     neighbors_cost = 1
-                    bonus_priority = 0
                 elif self.zones[neighbors]["zone"] == "priority":
                     neighbors_cost = 1
-                    bonus_priority = -0.1
                 elif self.zones[neighbors]["zone"] == "restricted":
                     neighbors_cost = 2
-                    bonus_priority = 0
-                neighbors_cost += usage.get(neighbors, 0)
-                new_cost = min_cost + neighbors_cost + bonus_priority
+                new_cost = min_cost + neighbors_cost
+                new_has_priority = passed_priority[current_zone] or (
+                    self.zones[neighbors]["zone"] == "priority"
+                    )
                 if new_cost < distance[neighbors]:
                     distance[neighbors] = new_cost
                     parents[neighbors] = current_zone
+                    passed_priority[neighbors] = new_has_priority
                 elif new_cost == distance[neighbors]:
-                    if self.zones[neighbors]["zone"] == "priority":
+                    if new_has_priority and not passed_priority[neighbors]:
                         parents[neighbors] = current_zone
+                        passed_priority[neighbors] = new_has_priority
             index = non_visited.index(current_zone)
             non_visited.pop(index)
         current = self.end
+        if current not in parents and current != self.start:
+            raise ValueError("ERROR: map not possible.")
         while current != self.start:
             path.append(current)
             current = parents[current]

@@ -1,15 +1,19 @@
+from typing import Any
+
+
 class Parser:
-    def __init__(self, filename):
-        self.filename = filename
-        self.drone_count = 0
-        self.check_name_zone = []
-        self.zones = {}
-        self.connections = []
+    def __init__(self, filename: str) -> None:
+        self.filename: str = filename
+        self.drone_count: int = 0
+        self.check_name_zone: list[str] = []
+        self.zones: dict[str, dict[str, Any]] = {}
+        self.connections: list[dict[str, Any]] = []
 
     def _is_valid_zone_name(self, name: str) -> bool:
         return name != "" and " " not in name and "-" not in name
 
-    def _extract_metadata(self, line, number_line) -> tuple[str, dict]:
+    def _extract_metadata(self, line: str, number_line: int
+                          ) -> tuple[str, dict[str, str]]:
         if "[" in line and "]" not in line:
             raise ValueError(f"ERROR line {number_line}: incorrect format for "
                              "metadata.")
@@ -40,9 +44,10 @@ class Parser:
             main_part = line.strip()
         return main_part, metadata_dct
 
-    def _get_zone_metadata(self, metadata_dct, number_line, lst_zone,
-                           zone_type, color,
-                           max_drones) -> tuple:
+    def _get_zone_metadata(self, metadata_dct: dict[str, str],
+                           number_line: int, lst_zone: list[str],
+                           zone_type: str, color: str,
+                           max_drones: int) -> tuple[str, str, int]:
         for key, value in metadata_dct.items():
             if key == 'zone':
                 if value not in lst_zone:
@@ -65,11 +70,11 @@ class Parser:
                 color = value
         return zone_type, color, max_drones
 
-    def parsing(self) -> dict:
+    def parsing(self) -> dict[str, Any]:
         file_has_content = False
         check_first_line = False
         lst_zone = ["normal", "blocked", "restricted", "priority"]
-        seen_connexion = []
+        seen_connection = set()
         count_start_hub = 0
         count_end_hub = 0
         try:
@@ -82,8 +87,8 @@ class Parser:
                     name_zone = "none"
                     x = 0
                     y = 0
-                    connexion_from = "none"
-                    connexion_to = "none"
+                    connection_from = "none"
+                    connection_to = "none"
                     stripped_line = line.strip()
                     if not stripped_line or stripped_line.startswith('#'):
                         continue
@@ -244,8 +249,8 @@ class Parser:
                                               strip().split("-"))
                         if len(main_part_data_lst) != 2:
                             raise ValueError(f"ERROR line {number_line}: "
-                                             "should be connexion between two "
-                                             "zones.")
+                                             "should be connection between "
+                                             "two zones.")
                         if (main_part_data_lst[0] not in self.check_name_zone
                            or main_part_data_lst[1]
                            not in self.check_name_zone):
@@ -259,17 +264,18 @@ class Parser:
                                              "name's zone contains invalid "
                                              "characters.")
                         else:
-                            connexion_from = main_part_data_lst[0]
-                            connexion_to = main_part_data_lst[1]
-                        check_dup = {connexion_from, connexion_to}
-                        if check_dup in seen_connexion:
+                            connection_from = main_part_data_lst[0]
+                            connection_to = main_part_data_lst[1]
+                        link = tuple(sorted([connection_from, connection_to]))
+                        if link in seen_connection:
                             raise ValueError(f"ERROR line {number_line}: "
-                                             "a connexion cannot exist twice.")
+                                             "a connection cannot exist "
+                                             "twice.")
                         else:
-                            seen_connexion.append(check_dup)
+                            seen_connection.add(link)
                         self.connections.append({
-                                        "from": connexion_from,
-                                        "to": connexion_to,
+                                        "from": connection_from,
+                                        "to": connection_to,
                                         "max_link_capacity": max_link_capacity,
                                     })
                 if not file_has_content:

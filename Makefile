@@ -23,12 +23,12 @@ clean:
 
 
 lint:
-	$(PYTHON) -m flake8 .
-	$(PYTHON) -m mypy --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs .
+	$(PYTHON) -m flake8 src main.py
+	$(PYTHON) -m mypy src main.py
 
 lint-strict:
-	$(PYTHON) -m flake8 .
-	$(PYTHON) -m mypy --strict .
+	$(PYTHON) -m flake8 src main.py
+	$(PYTHON) -m mypy --strict src main.py
 
 
 .PHONY: all install run debug clean lint lint-strict

@@ -64,44 +64,4 @@ Turn 1: D1 -> A
 Turn 2: D1 -> B, D2 -> A
 Turn 3: D1 -> goal, D2 -> B
 
-import pygame
-
-def run_visualization(graph, turns):
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    clock = pygame.time.Clock()
-    
-    pos = {name: (data["x"]*50+50, data["y"]*50+50) for name, data in graph.zones.items()}
-    drone_positions = {}
-    turn_index = 0
-    last_update = 0
-    
-    running = True
-    while running:
-        screen.fill((30, 30, 30))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        if pygame.time.get_ticks() - last_update > 800:
-            if turn_index < len(turns):
-                for move in turns[turn_index]:
-                    drone, zone = move.split("-")
-                    drone_positions[drone] = zone
-                turn_index += 1
-                last_update = pygame.time.get_ticks()
-
-        for c in graph.connections:
-            pygame.draw.line(screen, (100,100,100), pos[c["from"]], pos[c["to"]], 2)
-
-        for name in graph.zones:
-            pygame.draw.circle(screen, (100,100,255), pos[name], 10)
-
-        for drone, zone in drone_positions.items():
-            pygame.draw.circle(screen, (255,255,255), pos[zone], 5)
-            
-        pygame.display.flip()
-        clock.tick(60)
-    pygame.quit()
-
 nombre drone / capacite max

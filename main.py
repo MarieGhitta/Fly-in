@@ -3,10 +3,11 @@ from src.graph import Graph
 from src.pathfinder import Pathfinder
 from src.simulation import Simulation
 from src.visualization import Visualization
+from typing import Any
 import sys
 
 
-def main():
+def main() -> None:
     try:
         if len(sys.argv) < 2:
             raise ValueError("ERROR: missing map file")
@@ -16,8 +17,8 @@ def main():
         parser = Parser(filename)
         result = parser.parsing()
 
-        zones = result["zones"]
-        connections = result["connections"]
+        zones: dict[str, dict[str, Any]] = result["zones"]
+        connections: list[dict[str, Any]] = result["connections"]
 
         graph = Graph(zones, connections)
 

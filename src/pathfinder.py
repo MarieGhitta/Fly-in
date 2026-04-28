@@ -1,15 +1,17 @@
 from src.graph import Graph
+from typing import Any
 
 
 class Pathfinder:
-    def __init__(self, graph: Graph, zones: dict, start: str, end: str):
+    def __init__(self, graph: Graph, zones: dict[str, dict[str, Any]],
+                 start: str, end: str) -> None:
         self.graph = graph
         self.zones = zones
         self.start = start
         self.end = end
 
-    def find_shortest_path(self) -> list:
-        distance = {}
+    def find_shortest_path(self) -> list[str]:
+        distance: dict[str, float] = {}
         non_visited = []
         parents = {}
         path = []
@@ -59,4 +61,3 @@ class Pathfinder:
             current = parents[current]
         path.append(self.start)
         return path[::-1]
-

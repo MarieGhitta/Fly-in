@@ -1,15 +1,16 @@
 from src.drone import Drone
 from src.graph import Graph
+from typing import Any
 
 
 class Simulation:
-    def __init__(self, graph: Graph, path: list, nb_drones: int):
+    def __init__(self, graph: Graph, path: list[str], nb_drones: int) -> None:
         self.graph = graph
         self.path = path
         self.nb_drones = nb_drones
-        self.drones = []
+        self.drones: list[Drone] = []
 
-    def add_drones(self) -> list[list]:
+    def add_drones(self) -> list[Drone]:
         ID = 1
         nb = self.nb_drones
         while nb > 0:
@@ -19,23 +20,23 @@ class Simulation:
             ID += 1
         return self.drones
 
-    def get_link_capacity(self, current_zone, next_zone) -> int:
+    def _get_link_capacity(self, current_zone: str, next_zone: str) -> int:
         for connect in self.graph.connections:
             if (current_zone == connect["from"] and next_zone == connect["to"]
                 or current_zone == connect["to"]
                and next_zone == connect["from"]):
-                max_link_capacity = connect["max_link_capacity"]
+                max_link_capacity: int = connect["max_link_capacity"]
                 return max_link_capacity
         return 1
 
-    def run(self) -> list:
+    def run(self) -> list[list[str]]:
         count_turn = 0
         turns = []
         while True:
             finished = True
-            positions_reserved = {}
+            positions_reserved: dict[str, int] = {}
             moves = []
-            link_usage = {}
+            link_usage: dict[Any, Any] = {}
             for drone in self.drones:
                 is_finished = drone.current_position == len(drone.path) - 1
                 if not is_finished:
@@ -49,14 +50,14 @@ class Simulation:
                     current_zone = drone.path[drone.current_position]
                     next_zone = drone.path[drone.current_position + 1]
                     link = tuple(sorted([current_zone, next_zone]))
-                    max_drones = self.graph.zones[next_zone].get(
-                        "max_drones", 1)
-                    max_link_capacity = self.get_link_capacity(
+                    max_drones = int(self.graph.zones[next_zone].get(
+                        "max_drones", 1))
+                    max_link_capacity = self._get_link_capacity(
                         current_zone, next_zone)
                     if (next_zone == drone.path[-1]
                         or (positions_reserved.get(
-                        next_zone, 0) < max_drones
-                        and link_usage.get(link, 0) < max_link_capacity)):
+                         next_zone, 0) < max_drones
+                       and link_usage.get(link, 0) < max_link_capacity)):
                         drone.current_position += 1
                         if self.graph.zones[next_zone][
                                 "zone"] == "restricted":

@@ -4,39 +4,32 @@ from src.graph import Graph
 
 
 class Visualization:
-    def __init__(self, graph: Graph, turns: list, filename: str):
+    def __init__(self, graph: Graph, turns: list[list[str]], filename: str):
         self.graph = graph
         self.turns = turns
         self.filename = filename
-    
-    def _build_nodes(self):
+
+    def _build_nodes(self) -> go.Scatter:
         x = []
         y = []
         labels = []
-        colors = []
-
+        colors: list[str] = []
         for i, (name, data) in enumerate(self.graph.zones.items()):
             x.append(data["x"])
             y.append(data["y"])
             labels.append(name)
-
             RAINBOW = ["red", "orange", "yellow", "green", "blue", "purple"]
-            
             color = data["color"].lower()
-
             if color != "none":
-
                 # 👇 1. gérer explicitement rainbow AVANT tout
                 if color == "rainbow":
                     colors.append(RAINBOW[i % len(RAINBOW)])
-
                 else:
                     try:
                         validate_colors([color])
                         colors.append(color)
                     except ValueError:
                         colors.append("gray")
-
             else:
                 if data["hub_type"] == "start_hub":
                     colors.append("green")
@@ -46,7 +39,6 @@ class Visualization:
                     colors.append("red")
                 else:
                     colors.append("blue")
-        
         return go.Scatter(
             x=x,
             y=y,
@@ -59,8 +51,8 @@ class Visualization:
             marker=dict(size=40, color=colors),
             name="zones"
         )
-    
-    def _build_edges(self):
+
+    def _build_edges(self) -> go.Scatter:
         edge_x = []
         edge_y = []
 
@@ -72,7 +64,7 @@ class Visualization:
 
             edge_x += [x0, x1, None]
             edge_y += [y0, y1, None]
-        
+
         return go.Scatter(
             x=edge_x,
             y=edge_y,
@@ -81,8 +73,8 @@ class Visualization:
             hoverinfo="none",
             name="Connections"
         )
-    
-    def _build_frame(self):
+
+    def _build_frame(self) -> list[go.Frame]:
         frames = []
         drone_positions = {}
         start = self.graph.start
@@ -93,18 +85,14 @@ class Visualization:
             for move in turn:
                 drone, _ = move.split("-")
                 drone_ids.add(drone)
-
         drone_positions = {drone: start for drone in drone_ids}
-        
         x = []
         y = []
         labels = []
-
         for drone, zone in drone_positions.items():
             x.append(self.graph.zones[zone]["x"])
             y.append(self.graph.zones[zone]["y"])
             labels.append(f"<b>{drone}</b>")
-    
         frames.append(
             go.Frame(
                 name="0",
@@ -119,8 +107,8 @@ class Visualization:
                             size=16,
                             color="black"
                         ),
-                        marker=dict(size=10, 
-                                    color="white", 
+                        marker=dict(size=10,
+                                    color="white",
                                     symbol='diamond',
                                     line=dict(width=2,
                                               color="black"))
@@ -129,7 +117,6 @@ class Visualization:
                 traces=[2]
             )
         )
-
         for turn in self.turns:
             restricted_hit = False
             for move in turn:
@@ -138,16 +125,13 @@ class Visualization:
 
                 if self.graph.zones[zone]["zone"] == "restricted":
                     restricted_hit = True
-            
             x = []
             y = []
             labels = []
-
             for drone, zone in drone_positions.items():
                 x.append(self.graph.zones[zone]["x"])
                 y.append(self.graph.zones[zone]["y"])
                 labels.append(drone)
-                   
             frame = go.Frame(
                     name=str(len(frames)),
                     data=[
@@ -161,8 +145,8 @@ class Visualization:
                                 size=16,
                                 color="black"
                             ),
-                            marker=dict(size=10, 
-                                        color="white", 
+                            marker=dict(size=10,
+                                        color="white",
                                         symbol='diamond',
                                         line=dict(width=2, color="black"))
                         )
@@ -173,16 +157,13 @@ class Visualization:
             frames.append(frame)
             if restricted_hit:
                 frames.append(frame)
-
         return frames
-    
-    def show(self):
+
+    def show(self) -> None:
         edge_trace = self._build_edges()
         node_trace = self._build_nodes()
         frames = self._build_frame()
-
         initial_drones = frames[0].data[0] if frames else None
-
         fig = go.Figure(
             data=[edge_trace, node_trace, initial_drones],
             frames=frames
@@ -204,7 +185,7 @@ class Visualization:
                 ]
             }],
             sliders=[{
-                "active":0,
+                "active": 0,
                 "currentvalue": {"prefix": "Turn: "},
                 "steps": [
                     {
@@ -218,8 +199,6 @@ class Visualization:
                     for i, frame in enumerate(frames)
                 ]
             }]
-
         )
-
 
         fig.show()

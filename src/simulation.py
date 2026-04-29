@@ -1,16 +1,33 @@
+"""Simulate turns."""
+
+
 from src.drone import Drone
 from src.graph import Graph
 from typing import Any
 
 
 class Simulation:
+    """Create class Simulation."""
+
     def __init__(self, graph: Graph, path: list[str], nb_drones: int) -> None:
+        """Initialize the class Simulation.
+
+        Args:
+            graph (Graph): the graph where th drones moves.
+            path (list[str]): the path found with pathfinder.
+            nb_drones (int): number of drones.
+        """
         self.graph = graph
         self.path = path
         self.nb_drones = nb_drones
         self.drones: list[Drone] = []
 
     def add_drones(self) -> list[Drone]:
+        """Add Drones in a list.
+
+        Returns:
+            list[Drone]: list of drones.
+        """
         ID = 1
         nb = self.nb_drones
         while nb > 0:
@@ -30,6 +47,11 @@ class Simulation:
         return 1
 
     def run(self) -> list[list[str]]:
+        """Run the turn.
+
+        Returns:
+            list[list[str]]: list of all the turns.
+        """
         count_turn = 0
         turns = []
         while True:

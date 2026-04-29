@@ -1,16 +1,37 @@
+"""Find the cheapest path."""
+
+
 from src.graph import Graph
 from typing import Any
 
 
 class Pathfinder:
+    """Create class Pathfinder."""
+
     def __init__(self, graph: Graph, zones: dict[str, dict[str, Any]],
                  start: str, end: str) -> None:
+        """Initialize class Pathfinder.
+
+        Args:
+            graph (Graph): the grath create by class Graph.
+            zones (dict[str, dict[str, Any]]): dict created with the parsing.
+            start (str): start zone.
+            end (str): end zone.
+        """
         self.graph = graph
         self.zones = zones
         self.start = start
         self.end = end
 
-    def find_shortest_path(self) -> list[str]:
+    def find_cheapest_path(self) -> list[str]:
+        """Find cheapest path.
+
+        Raises:
+            ValueError: start zone not connected.
+
+        Returns:
+            list[str]: the path.
+        """
         distance: dict[str, float] = {}
         non_visited = []
         parents = {}

@@ -1,8 +1,18 @@
+"""Parsing file."""
+
+
 from typing import Any
 
 
 class Parser:
+    """Create class Parser."""
+
     def __init__(self, filename: str) -> None:
+        """Initialize class Parse.
+
+        Args:
+            filename (str): the configuration given in arguments.
+        """
         self.filename: str = filename
         self.drone_count: int = 0
         self.check_name_zone: list[str] = []
@@ -71,6 +81,29 @@ class Parser:
         return zone_type, color, max_drones
 
     def parsing(self) -> dict[str, Any]:
+        """Parse the input file.
+
+        Raises:
+            ValueError: first line format not correct.
+            ValueError: number drones must be integer.
+            ValueError: number drones must be positif.
+            ValueError: first line doen't gives the number of drones.
+            ValueError: format of line not correct.
+            ValueError: should be only one start.
+            ValueError: should be only one end.
+            ValueError: line format not correct.
+            ValueError: cannot use twice the name of a zone.
+            ValueError: cannot contains invalid characters.
+            ValueError: coordinates not valid.
+            ValueError: incorrect format for metadatas.
+            ValueError: file empty or only comments.
+            ValueError: should be one start_hub.
+            ValueError: should be one end_hub.
+            ValueError: file does not exist.
+
+        Returns:
+            dict[str, Any]: dictionnaire with confirations parameters.
+        """
         file_has_content = False
         check_first_line = False
         lst_zone = ["normal", "blocked", "restricted", "priority"]

@@ -1,3 +1,5 @@
+"""Main file."""
+
 from src.parsing import Parser
 from src.graph import Graph
 from src.pathfinder import Pathfinder
@@ -8,6 +10,11 @@ import sys
 
 
 def main() -> None:
+    """Create the simulation and vusualization.
+
+    Raises:
+        if no file given as map configuration.
+    """
     try:
         if len(sys.argv) < 2:
             raise ValueError("ERROR: missing map file")
@@ -24,7 +31,7 @@ def main() -> None:
 
         pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
-        path = pathfinder.find_shortest_path()
+        path = pathfinder.find_cheapest_path()
 
         simulation = Simulation(graph, path, parser.drone_count)
         simulation.add_drones()

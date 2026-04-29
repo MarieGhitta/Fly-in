@@ -4,7 +4,7 @@
 
 ## Description
 Fly-in is a Python project that simulates the routing of multiple drones across a network of interconnected zones.  
-The objective is to move all drones from a **start hub** to an **end hub** in the **fewest possible turns**, while respecting strict constraints such as:
+The objective is to move all drones from a start hub to an *end hub in the fewest possible turns, while respecting strict constraints such as:
 
 - Zone capacity limits
 - Connection capacity limits
@@ -15,19 +15,19 @@ The project is based on a graph representation of zones and connections, combine
 
 ---
 
-## Features
+### Features
 
-- Custom **file parser** for map configuration
-- Graph-based **network modeling**
-- **Shortest path algorithm** with cost handling
-- Multi-drone **simulation engine**
-- **Turn-by-turn output**
-- Interactive **visualization using Plotly**
+- file parser for map configuration
+- Graph-based for construction of the map
+- Cheapest path algorithm
+- Multi-drone simulation engine
+- Turn-by-turn output
+- Interactive visualization using Plotly
 - Full error handling and validation
 
 ---
 
-## Project Structure
+### Project Structure
 
 ```
 .
@@ -45,13 +45,11 @@ The project is based on a graph representation of zones and connections, combine
 
 ---
 
-## How It Works
-
 ### 1. Parsing
 The parser reads a map file and extracts:
 - Number of drones
 - Zones (type, coordinates, metadata)
-- Connections
+- Connections (from, to, metadata)
 
 It validates the file format strictly and raises errors if needed.
 
@@ -85,7 +83,9 @@ Using Plotly:
 
 ---
 
-## Installation
+## Instruction
+
+### Installation
 
 ```bash
 make install
@@ -99,7 +99,7 @@ pip install -r requirements.txt
 
 ---
 
-## Usage
+### Usage
 
 ```bash
 make run FILE=map.txt
@@ -113,7 +113,7 @@ python main.py map.txt
 
 ---
 
-## Example Output
+### Example Output
 
 ```
 D1-roof1 D2-corridorA
@@ -198,54 +198,29 @@ Once the algorithm reaches the destination:
 
 ---
 
-### Complexity
-
-- Time complexity: **O(V²)**
-- Space complexity: **O(V)**
-
-Where `V` is the number of zones.
-
----
-
-### Limitations
-
-- The algorithm computes **only one shortest path**
-- It does not distribute drones across multiple paths
-- This can lead to congestion in the simulation
-
----
-
-### Possible Improvements
-
-- Implement **multi-path routing**
-- Use a **priority queue (heap)** to improve performance → O((V + E) log V)
-- Replace Dijkstra with **A\*** for faster convergence
-- Add **traffic-aware routing** based on congestion
-
----
-
-### Summary
-
-This implementation of Dijkstra:
-- Computes the shortest path based on movement cost
-- Integrates zone-specific constraints
-- Adds a custom priority optimization
-- Serves as the foundation for the drone simulation
-
----
-
 ## Simulation Engine
 
 ### Overview
 
 The simulation engine is responsible for moving all drones from the `start_hub` to the `end_hub` while respecting all constraints defined in the subject.
 
-The simulation runs in **discrete turns**, where each drone may:
+The simulation runs in discrete turns, where each drone may:
 - Move to the next zone
 - Wait if movement is not possible
 - Handle multi-turn movement for restricted zones
 
-The main objective is to minimize the **total number of turns**.
+The main objective is to minimize the total number of turns.
+
+---
+
+### Constraints Handling
+
+- One drone per zone (unless specified)
+- Multiple drones allowed in:
+  - Start zone
+  - End zone
+- Link capacity enforced
+- No movement through blocked zones
 
 ---
 
@@ -286,15 +261,15 @@ If movement is not possible, the drone stays in place.
 
 ### Zone Capacity Management
 
-- By default, a zone can contain only **one drone**
+- By default, a zone can contain only one drone
 - Some zones allow more via `max_drones`
 - The simulation uses a `positions_reserved` structure to:
   - Track how many drones will occupy a zone in the current turn
   - Prevent exceeding capacity
 
 Special cases:
-- The **start zone** allows all drones initially
-- The **end zone** can receive multiple drones
+- The start zone allows all drones initially
+- The end zone can receive multiple drones
 
 ---
 
@@ -310,7 +285,7 @@ The simulation tracks this using a `link_usage` structure:
 
 ### Restricted Zones Handling
 
-Restricted zones require **2 turns to enter**.
+Restricted zones require 2 turns to enter.
 
 Implementation:
 - When a drone enters a restricted zone:
@@ -340,16 +315,6 @@ All decisions are made **before applying movements**, ensuring consistency.
 
 Each turn prints all drone movements:
 
-
-## Constraints Handling
-
-- One drone per zone (unless specified)
-- Multiple drones allowed in:
-  - Start zone
-  - End zone
-- Link capacity enforced
-- No movement through blocked zones
-
 ---
 
 ## Visual Representation
@@ -363,24 +328,17 @@ The visualization enhances understanding by:
 
 ## Resources
 
-- Python documentation
-- Plotly documentation
-- Graph theory (Dijkstra algorithm)
+### Python documentation:
+  - https://docs.python.org/3/
+### Dijkstra algorithm:
+  - https://www.programiz.com/dsa/dijkstra-algorithm
+  - https://www.datacamp.com/tutorial/dijkstra-algorithm-in-python
+### Plotly documentation:
+  - https://plotly.com/python/graph-objects/
+
+
 
 ### AI Usage
 AI was used for:
-- Structuring the README
-- Improving documentation clarity
-- Reviewing algorithm explanations
-
-All generated content was reviewed and understood before use.
-
-## Conclusion
-
-This project demonstrates:
-- Graph algorithms
-- Simulation design
-- Constraint handling
-- Clean code architecture
-
-It highlights how algorithmic choices directly impact performance and efficiency.
+- Answering questions about the visualization. The documentation was quite tricky to catch..
+- Answering question about global informations, as I would do with a teacher. I explicitely ask to not show code to me, except for the visualization, which I was stuck and found no example on internet about what I precisely needed.

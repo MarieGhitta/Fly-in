@@ -65,3 +65,5 @@ Turn 2: D1 -> B, D2 -> A
 Turn 3: D1 -> goal, D2 -> B
 
 nombre drone / capacite max
+
+if ! command -v gum 2>/dev/null; then echo "gum not installed"; exit 1; fi

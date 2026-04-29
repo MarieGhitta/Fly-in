@@ -1,10 +1,21 @@
+"""Visualization of the simulation."""
+
 import plotly.graph_objects as go
 from plotly.colors import validate_colors
 from src.graph import Graph
 
 
 class Visualization:
+    """Create class Visualization."""
+
     def __init__(self, graph: Graph, turns: list[list[str]], filename: str):
+        """Initialize class Visualization.
+
+        Args:
+            graph (Graph): the graph where the drone moves.
+            turns (list[list[str]]): the list of all the turns.
+            filename (str): the configuration file in input.
+        """
         self.graph = graph
         self.turns = turns
         self.filename = filename
@@ -160,6 +171,7 @@ class Visualization:
         return frames
 
     def show(self) -> None:
+        """Run the simulation."""
         edge_trace = self._build_edges()
         node_trace = self._build_nodes()
         frames = self._build_frame()

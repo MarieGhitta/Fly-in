@@ -1,9 +1,21 @@
+"""Create the graph."""
+
 from typing import Any
 
 
 class Graph:
+    """Create class graph."""
+
     def __init__(self, zones: dict[str, dict[str, Any]],
                  connections: list[dict[str, Any]]) -> None:
+        """Initialize the class.
+
+        Args:
+            zones (dict[str, dict[str, Any]]):
+                dictionnary with zones informations.
+            connections (list[dict[str, Any]]):
+                list of connection's informations.
+        """
         self.zones = zones
         self.connections = connections
         self.adjacency_list: dict[str, list[str]] = {}

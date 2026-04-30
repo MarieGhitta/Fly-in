@@ -83,7 +83,7 @@ Using Plotly:
 
 ---
 
-## Instruction
+## Instructions
 
 ### Installation
 
@@ -139,16 +139,7 @@ The goal is to minimize the **total number of simulation turns**, taking into ac
 
 ### Core Principle
 
-Dijkstra’s algorithm computes the shortest path by iteratively selecting the node with the smallest known distance and updating its neighbors.
-
-The main formula is:
-
-d(v) = min(d(u) + w(u, v))
-
-Where:
-- `d(v)` is the shortest distance to node `v`
-- `u` is a neighbor of `v`
-- `w(u, v)` is the cost to move from `u` to `v`
+Dijkstra’s algorithm computes the shortest path by iteratively selecting the node with the smallest cost and updating its neighbors.
 
 ---
 
@@ -162,7 +153,7 @@ Where:
 
 ### Node Selection
 
-At each step, the algorithm selects the **non-visited node with the smallest distance**.
+At each step, the algorithm selects the non-visited node with the smallest distance.
 
 This ensures that the most promising path is always explored first.
 
@@ -184,7 +175,7 @@ For each neighbor of the current node:
 
 This implementation includes a custom optimization:
 
-- If two paths have the **same cost**, the algorithm prefers the one that passes through a `priority` zone.
+- If two paths have the same cost, the algorithm prefers the one that passes through a `priority` zone.
 
 This improves path quality without increasing total cost.
 
@@ -296,7 +287,7 @@ Implementation:
   - It completes the required delay
 
 This ensures compliance with the subject rule:
-> A drone cannot wait on a connection — it must complete the move.
+ "A drone cannot wait on a connection — it must complete the move."
 
 ---
 
@@ -307,7 +298,7 @@ The simulation prevents:
 - Multiple drones exceeding link capacity
 - Movement conflicts during the same turn
 
-All decisions are made **before applying movements**, ensuring consistency.
+All decisions are made before applying movements, ensuring consistency.
 
 ---
 

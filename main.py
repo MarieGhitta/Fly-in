@@ -16,8 +16,8 @@ def main() -> None:
         if no file given as map configuration.
     """
     try:
-        if len(sys.argv) < 2:
-            raise ValueError("ERROR: missing map file")
+        # if len(sys.argv) != 2:
+        #     raise ValueError("ERROR: missing map file")
 
         filename = sys.argv[1]
 

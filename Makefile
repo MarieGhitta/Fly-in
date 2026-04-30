@@ -1,4 +1,4 @@
-PYTHON = python3
+PYTHON = python3.14
 MAIN = main.py
 REQUIREMENTS = requirements.txt
 CONFIG = config.py
@@ -9,12 +9,10 @@ install:
 	$(PYTHON) -m pip install -r $(REQUIREMENTS)
 
 run:
-	@map=$$(find maps -name "*.txt" | sort | gum choose); \
-	$(PYTHON) $(MAIN) $$map
+	$(PYTHON) $(MAIN) $(filter-out $@,$(MAKECMDGOALS))
 
 debug:
-	@map=$$(find maps -name "*.txt" | sort | gum choose); \
-	$(PYTHON) -m pdb $(MAIN) $$map
+	$(PYTHON) $(MAIN) $(filter-out $@,$(MAKECMDGOALS))
 
 clean:
 	rm -rf .mypy_cache .pytest_cache .DS_Store

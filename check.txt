@@ -46,24 +46,19 @@ debug:
 	@map=$$(find maps -name "*.txt" | sort | gum choose); \
 	$(PYTHON) -m pdb $(MAIN) $$map
 
-Pygame Visualization Guide (Fly-in Project)
-This guide explains how to build a simple visualization system for your drone simulation using
-Pygame.
-1. Keep your simulation output (turns).
-2. Convert turns into structured data.
-3. Use zones (x, y) to place nodes.
-4. Draw:
-- edges (connections)
-- nodes (zones)
-- drones (positions)
-5. Update per turn (timer-based).
-Visual Schema (concept):
-(start) --- (A) --- (B) --- (goal)
-Drones move step by step along nodes.
-Turn 1: D1 -> A
-Turn 2: D1 -> B, D2 -> A
-Turn 3: D1 -> goal, D2 -> B
 
 nombre drone / capacite max
 
 if ! command -v gum 2>/dev/null; then echo "gum not installed"; exit 1; fi
+
+
+--------------------------------------------------------------------------
+make: Nothing to be done for 'maps/easy/01_linear_path.txt'.
+
+ajouter flake8, flake8-docstrings and mypy dans le Makefile install ? 
+
+make: Nothing to be done for 'maps/easy/03_basic_capacity.txt'.
+make: *** No rule to make target 'flag'.  Stop.
+
+{positions_reserved[next_zone]}/{max_drones}
+check nombres de drones a la fin simulationVSvisuel

@@ -31,9 +31,9 @@ def main() -> None:
 
         pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
-        path = pathfinder.find_cheapest_path()
+        paths = pathfinder.find_cheapest_path()
 
-        simulation = Simulation(graph, path, parser.drone_count)
+        simulation = Simulation(graph, paths, parser.drone_count)
         simulation.add_drones()
         turns = simulation.run()
 

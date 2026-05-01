@@ -23,7 +23,7 @@ class Pathfinder:
         self.start = start
         self.end = end
 
-    def find_cheapest_path(self) -> list[str]:
+    def find_cheapest_path(self) -> list[list[str]]:
         """Find cheapest path.
 
         Raises:
@@ -34,8 +34,7 @@ class Pathfinder:
         """
         distance: dict[str, float] = {}
         non_visited = []
-        parents = {}
-        path = []
+        parents: dict[str, list[str]] = {}
         passed_priority = {}
         for name_zone in self.zones:
             if name_zone == self.start:
@@ -66,19 +65,46 @@ class Pathfinder:
                     )
                 if new_cost < distance[neighbors]:
                     distance[neighbors] = new_cost
-                    parents[neighbors] = current_zone
+                    parents[neighbors] = [current_zone]
                     passed_priority[neighbors] = new_has_priority
                 elif new_cost == distance[neighbors]:
-                    if new_has_priority and not passed_priority[neighbors]:
-                        parents[neighbors] = current_zone
-                        passed_priority[neighbors] = new_has_priority
+                    if neighbors not in parents:
+                        parents[neighbors] = []
+                    parents[neighbors].append(current_zone)
+                    passed_priority[neighbors] = (
+                        passed_priority[neighbors] or new_has_priority
+                    )
             index = non_visited.index(current_zone)
             non_visited.pop(index)
-        current = self.end
-        if current not in parents and current != self.start:
+        if self.end not in parents and self.end != self.start:
             raise ValueError("ERROR: map not possible.")
-        while current != self.start:
-            path.append(current)
-            current = parents[current]
-        path.append(self.start)
-        return path[::-1]
+        paths = self._build_paths(parents)
+        priority_paths = []
+        for p in paths:
+            has_priority = False
+            for zone in p:
+                if self.zones[zone]["zone"] == "priority":
+                    has_priority = True
+                    break
+            if has_priority:
+                priority_paths.append(p)
+        print(paths)
+        if priority_paths:
+            return priority_paths
+        return paths
+
+    def _build_paths(self, parents, max_paths=3):
+        paths = []
+        stack = [(self.end, [self.end])]  # quelle position dans quel chemin
+        while stack:
+            current, path = stack.pop()
+            if current == self.start:
+                paths.append(path[::-1])
+                if len(paths) >= max_paths:
+                    break
+                continue
+            for parent in parents.get(current, []):
+                stack.append((parent, path + [parent]))
+        return paths
+
+

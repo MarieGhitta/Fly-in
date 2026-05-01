@@ -9,7 +9,7 @@ from typing import Any
 class Simulation:
     """Create class Simulation."""
 
-    def __init__(self, graph: Graph, path: list[str], nb_drones: int) -> None:
+    def __init__(self, graph: Graph, paths: list[list[str]], nb_drones: int) -> None:
         """Initialize the class Simulation.
 
         Args:
@@ -18,7 +18,7 @@ class Simulation:
             nb_drones (int): number of drones.
         """
         self.graph = graph
-        self.path = path
+        self.paths = paths
         self.nb_drones = nb_drones
         self.drones: list[Drone] = []
 
@@ -31,7 +31,8 @@ class Simulation:
         ID = 1
         nb = self.nb_drones
         while nb > 0:
-            drone = Drone(ID, self.path)
+            path = self.paths[ID % len(self.paths)]
+            drone = Drone(ID, path)
             self.drones.append(drone)
             nb -= 1
             ID += 1

@@ -32,7 +32,6 @@ class Visualization:
             RAINBOW = ["red", "orange", "yellow", "green", "blue", "purple"]
             color = data["color"].lower()
             if color != "none":
-                # 👇 1. gérer explicitement rainbow AVANT tout
                 if color == "rainbow":
                     colors.append(RAINBOW[i % len(RAINBOW)])
                 else:
@@ -129,13 +128,10 @@ class Visualization:
             )
         )
         for turn in self.turns:
-            restricted_hit = False
             for move in turn:
                 drone, zone = move.split("-")
                 drone_positions[drone] = zone
 
-                if self.graph.zones[zone]["zone"] == "restricted":
-                    restricted_hit = True
             x = []
             y = []
             labels = []
@@ -166,8 +162,6 @@ class Visualization:
                 )
 
             frames.append(frame)
-            if restricted_hit:
-                frames.append(frame)
         return frames
 
     def show(self) -> None:

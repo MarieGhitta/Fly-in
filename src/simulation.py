@@ -84,11 +84,11 @@ class Simulation:
                         if self.graph.zones[next_zone][
                                 "zone"] == "restricted":
                             drone.nb_waiting_turn = 1
-                        moves.append(f"D{drone.ID}-{next_zone}")
                         positions_reserved[
                             next_zone] = positions_reserved.get(
                                 next_zone, 0) + 1
                         link_usage[link] = link_usage.get(link, 0) + 1
+                        moves.append(f"D{drone.ID}-{next_zone}")
             if finished:
                 break
             count_turn += 1

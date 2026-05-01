@@ -102,7 +102,7 @@ pip install -r requirements.txt
 ### Usage
 
 ```bash
-make run FILE=map.txt
+make run MAP=map.txt
 ```
 
 Or:
@@ -113,13 +113,29 @@ python main.py map.txt
 
 ---
 
+### Example Input
+
+```
+nb_drones: 2
+
+start_hub: start 0 0 [color=green]
+hub: waypoint1 1 0 [color=blue]
+hub: waypoint2 2 0 [color=blue]
+end_hub: goal 3 0 [color=red]
+
+connection: start-waypoint1
+connection: waypoint1-waypoint2
+connection: waypoint2-goal
+```
+
 ### Example Output
 
 ```
-D1-roof1 D2-corridorA
-D1-roof2 D2-tunnelB
-D1-goal D2-goal
-Total turns: 3
+D1-waypoint1
+D1-waypoint2 D2-waypoint1
+D1-goal D2-waypoint2
+D2-goal
+Total turns: 4
 ```
 
 ---

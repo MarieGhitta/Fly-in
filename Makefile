@@ -1,4 +1,4 @@
-PYTHON = python3.14
+PYTHON = python3
 MAIN = main.py
 REQUIREMENTS = requirements.txt
 CONFIG = config.py
@@ -9,10 +9,10 @@ install:
 	$(PYTHON) -m pip install -r $(REQUIREMENTS)
 
 run:
-	$(PYTHON) $(MAIN) $(filter-out $@,$(MAKECMDGOALS))
+	$(PYTHON) $(MAIN) $(MAP)
 
 debug:
-	$(PYTHON) $(MAIN) $(filter-out $@,$(MAKECMDGOALS))
+	$(PYTHON) $(MAIN) $(MAP)
 
 clean:
 	rm -rf .mypy_cache .pytest_cache .DS_Store

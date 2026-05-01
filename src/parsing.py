@@ -149,6 +149,12 @@ class Parser:
                                 raise ValueError(f"ERROR line {number_line}: "
                                                  "number of drones must be "
                                                  "strictly positive.")
+                            if ndrones > 999:
+                                raise ValueError(f"ERROR line {number_line}: "
+                                                 "due to the slow speed of "
+                                                 "this computer, I decided "
+                                                 "to limit the number max of "
+                                                 "drones at 999.")
                             self.drone_count = ndrones
                         if not check_first_line:
                             raise ValueError(f"ERROR line {number_line}: the "
@@ -256,20 +262,20 @@ class Parser:
                                         n = int(
                                             metadata_dct["max_link_capacity"]
                                             )
-                                        if n <= 0:
-                                            raise ValueError(
-                                                "ERROR line "
-                                                f"{number_line}: "
-                                                "max_link_capacity "
-                                                "value should be a "
-                                                "positif integer."
-                                                )
                                     except ValueError:
                                         raise ValueError("ERROR line "
                                                          f"{number_line}: "
                                                          "max_link_capacity "
                                                          "value should be an "
                                                          "integer.")
+                                    if n <= 0:
+                                        raise ValueError(
+                                            "ERROR line "
+                                            f"{number_line}: "
+                                            "max_link_capacity "
+                                            "value should be a "
+                                            "positif integer."
+                                            )
                                     max_link_capacity = n
                             main_part = line[:pos1].strip()
                         else:

@@ -1,7 +1,7 @@
 simulation:
 return simultion ? 
 Quand  print ?
-src/graph.py:5: error: Need type annotation for "adjacency_list" (hint: "adjacency_list: dict[<type>, <type>] = ...")  [var-annotated]
+src/graph.py:5: error: Need type annotation for "adjacency_dict" (hint: "adjacency_dict: dict[<type>, <type>] = ...")  [var-annotated]
 src/simulation.py:10: error: Need type annotation for "drones_per_path" (hint: "drones_per_path: list[<type>] = ...")  [var-annotated]
 src/simulation.py:44: error: Need type annotation for "positions_reserved" (hint: "positions_reserved: dict[<type>, <type>] = ...")  [var-annotated]
 src/simulation.py:46: error: Need type annotation for "link_usage" (hint: "link_usage: dict[<type>, <type>] = ...")  [var-annotated]
@@ -9,7 +9,7 @@ src/simulation.py:46: error: Need type annotation for "link_usage" (hint: "link_
 check 1 chemin
 
 graph:
-type_hint : self.adjacency_list = {}
+type_hint : self.adjacency_dict = {}
 
 pathfinder:
 src/pathfinder.py:22: error: Incompatible types in assignment (expression has type "float", target has type "int")  [assignment]
@@ -55,10 +55,63 @@ if ! command -v gum 2>/dev/null; then echo "gum not installed"; exit 1; fi
 --------------------------------------------------------------------------
 make: Nothing to be done for 'maps/easy/01_linear_path.txt'.
 
-ajouter flake8, flake8-docstrings and mypy dans le Makefile install ? 
 
 make: Nothing to be done for 'maps/easy/03_basic_capacity.txt'.
 make: *** No rule to make target 'flag'.  Stop.
 
 {positions_reserved[next_zone]}/{max_drones}
 check nombres de drones a la fin simulationVSvisuel
+
+------------------------------------------------------------------------
+est-ce que je laisse le count turn ?
+
+-----------------------------------------------------------------------
+capacity_info = False
+
+if "--capacity-info" in sys.argv:
+    capacity_info = True
+    sys.argv.remove("--capacity-info")
+
+if len(sys.argv) != 2:
+    raise ValueError("ERROR: missing map file")
+
+filename = sys.argv[1]
+
+simulation = Simulation(graph, path, parser.drone_count, capacity_info)
+
+def __init__(self, graph, path, nb_drones, capacity_info=False):
+    self.graph = graph
+    self.path = path
+    self.nb_drones = nb_drones
+    self.capacity_info = capacity_info
+    self.drones = []
+
+print(" ".join(moves))
+
+if self.capacity_info:
+    self._print_capacity(positions_reserved, link_usage)
+    def _print_capacity(self, positions_reserved, link_usage):
+        zone_counts = {}
+        infos = []
+
+        for drone in self.drones:
+            zone = drone.path[drone.current_position]
+            zone_counts[zone] = zone_counts.get(zone, 0) + 1
+
+        for zone, count in zone_counts.items():
+            max_drones = self.graph.zones[zone].get("max_drones", 1)
+            infos.append(f"Zone: {zone}: {count}/{max_drones} drones")
+        
+        for link, count in link_usage.items():
+            z1, z2 = link
+            max_cap = self._get_link_capacity(z1, z2)
+            infos.append(f"Connection {z1}-{z2}: {count}/{max_cap} capacity used")
+        
+        print(" | ".join(infos))
+
+---------------------------------------------------------------
+run:
+	$(PYTHON) $(MAIN) $(MAP)
+
+debug:
+	$(PYTHON) $(MAIN) $(MAP)

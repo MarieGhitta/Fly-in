@@ -157,7 +157,7 @@ class Parser:
                 line: str,
                 stripped_line: str,
                 number_line: int,
-                seen_connection: set
+                seen_connection: set[Any]
                 ) -> None:
         max_link_capacity = 1
         if "[" in line or "]" in line:
@@ -191,6 +191,7 @@ class Parser:
                              "two zones.")
         connection_from = main_part_data_lst[0]
         connection_to = main_part_data_lst[1]
+
         link = tuple(sorted([connection_from, connection_to]))
         if link in seen_connection:
             raise ValueError(f"ERROR line {number_line}: "
@@ -251,7 +252,7 @@ class Parser:
         file_has_content = False
         check_first_line = False
         lst_zone = ["normal", "blocked", "restricted", "priority"]
-        seen_connection = set()
+        seen_connection: set[tuple[str, str]] = set()
         count_start_hub = 0
         count_end_hub = 0
         try:
@@ -289,7 +290,8 @@ class Parser:
                         )
                     elif "-" in stripped_line in stripped_line:
                         raise ValueError(
-                            f"ERROR line {number_line}: incorrect connection format."
+                            f"ERROR line {number_line}: incorrect "
+                            "connection format."
                         )
                     else:
                         raise ValueError(

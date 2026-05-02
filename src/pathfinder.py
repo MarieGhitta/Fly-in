@@ -93,7 +93,8 @@ class Pathfinder:
             return priority_paths
         return paths
 
-    def _build_paths(self, parents, max_paths=3):
+    def _build_paths(self, parents: dict[str, list[str]], max_paths: int = 3
+                     ) -> list[list[str]]:
         paths = []
         stack = [(self.end, [self.end])]  # quelle position dans quel chemin
         while stack:
@@ -106,5 +107,3 @@ class Pathfinder:
             for parent in parents.get(current, []):
                 stack.append((parent, path + [parent]))
         return paths
-
-

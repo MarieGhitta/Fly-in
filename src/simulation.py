@@ -9,7 +9,8 @@ from typing import Any
 class Simulation:
     """Create class Simulation."""
 
-    def __init__(self, graph: Graph, paths: list[list[str]], nb_drones: int) -> None:
+    def __init__(self, graph: Graph, paths: list[list[str]], nb_drones: int
+                 ) -> None:
         """Initialize the class Simulation.
 
         Args:

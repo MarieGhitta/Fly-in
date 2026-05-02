@@ -88,26 +88,25 @@ def __init__(self, graph, path, nb_drones, capacity_info=False):
 
 print(" ".join(moves))
 
-if self.capacity_info:
-    self._print_capacity(positions_reserved, link_usage)
-    def _print_capacity(self, positions_reserved, link_usage):
-        zone_counts = {}
+    def _get_truc(self, link_usage):
         infos = []
-
+        zone_usage = {}
         for drone in self.drones:
             zone = drone.path[drone.current_position]
-            zone_counts[zone] = zone_counts.get(zone, 0) + 1
-
-        for zone, count in zone_counts.items():
-            max_drones = self.graph.zones[zone].get("max_drones", 1)
-            infos.append(f"Zone: {zone}: {count}/{max_drones} drones")
+            zone_usage[zone] = zone_usage.get(zone, 0) + 1
+        
+        for zone, count in zone_usage.items():
+            if zone == drone.path[0] or zone == drone.path[-1]:
+                max_drones = self.nb_drones
+            else:
+                max_drones = self.graph.zones[zone].get("max_drones", 1)
+            infos.append(f"zone : {zone} {count}/{max_drones} drones")
         
         for link, count in link_usage.items():
             z1, z2 = link
-            max_cap = self._get_link_capacity(z1, z2)
-            infos.append(f"Connection {z1}-{z2}: {count}/{max_cap} capacity used")
-        
-        print(" | ".join(infos))
+            cap_us = self._get_link_capacity(z1, z2)
+            infos.append(f"connection {link} : {count}/{cap_us}")
+        print(" , ".join(infos))
 
 ---------------------------------------------------------------
 run:

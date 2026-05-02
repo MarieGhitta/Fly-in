@@ -17,7 +17,7 @@ def main() -> None:
     """
     try:
         if len(sys.argv) != 2:
-            raise ValueError("ERROR: missing map file")
+            raise ValueError("ERROR: missing map file or two many arguments")
 
         filename = sys.argv[1]
 

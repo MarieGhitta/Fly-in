@@ -88,7 +88,6 @@ class Pathfinder:
                     break
             if has_priority:
                 priority_paths.append(p)
-        print(paths)
         if priority_paths:
             return priority_paths
         return paths

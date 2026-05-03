@@ -32,6 +32,7 @@ def main() -> None:
         pathfinder = Pathfinder(graph, zones, graph.start, graph.end)
 
         paths = pathfinder.find_cheapest_path()
+        print("DEBUG PATHS:", paths)
 
         simulation = Simulation(graph, paths, parser.drone_count)
         simulation.add_drones()

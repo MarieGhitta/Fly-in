@@ -19,7 +19,8 @@ The project is based on a graph representation of zones and connections, combine
 
 - file parser for map configuration
 - Graph-based for construction of the map
-- Cheapest path algorithm
+- Multi-path Dijkstra-based pathfinding
+- Priority-aware path selection
 - Multi-drone simulation engine
 - Turn-by-turn output
 - Interactive visualization using Plotly
@@ -60,20 +61,54 @@ The graph:
 - Ignores blocked zones
 
 ### 3. Pathfinding
-A Dijkstra-like algorithm is used:
-- Normal zone → cost 1
-- Priority zone → cost 1 (favored)
-- Restricted zone → cost 2
+### 3. Pathfinding
 
-The algorithm also prioritizes paths passing through priority zones.
+A modified version of the **Dijkstra algorithm** is used.
+
+#### Multi-path support
+
+Instead of returning a single shortest path, the algorithm:
+
+- Tracks multiple parents for each node when equal-cost paths are found
+- Reconstructs several optimal paths (limited to a maximum number)
+
+This allows:
+- Better distribution of drones
+- Reduced congestion
+- Improved performance
+
+#### Cost system
+
+- normal → cost = 1
+- priority → cost = 1
+- restricted → cost = 2
+
+#### Priority optimization
+
+If multiple paths have the same cost:
+
+- Paths passing through a priority zone are preferred
+
+#### Path reconstruction
+
+Paths are reconstructed from end_hub to start_hub using a backtracking approach.
 
 ### 4. Simulation
-- All drones follow the computed path
+- Drones are distributed across multiple optimal paths
 - Movement is done turn by turn
 - Constraints handled:
   - Zone capacity (`max_drones`)
   - Connection capacity (`max_link_capacity`)
   - Restricted zones require 2 turns
+
+### Multi-path distribution
+
+Drones are assigned to paths using a round-robin strategy:
+path = self.paths[ID % len(self.paths)]
+This ensures:
+- Balanced distribution of drones
+- Reduced congestion on a single path
+- Better usage of available capacity
 
 ### 5. Visualization
 Using Plotly:
@@ -144,9 +179,9 @@ Total turns: 4
 
 ### Overview
 
-This project uses a modified version of the **Dijkstra algorithm** to compute the shortest path from the `start_hub` to the `end_hub`.
+This project uses a modified version of the Dijkstra algorithm to compute the cheapest path from the `start_hub` to the `end_hub`.
 
-The goal is to minimize the **total number of simulation turns**, taking into account:
+The goal is to minimize the total number of simulation turns, taking into account:
 - Zone types (normal, restricted, priority)
 - Movement costs
 - Graph structure
@@ -200,8 +235,18 @@ This improves path quality without increasing total cost.
 ### Path Reconstruction
 
 Once the algorithm reaches the destination:
-- The path is reconstructed by following parent nodes from `end_hub` back to `start_hub`
-- The final path is then reversed to get the correct order
+- Instead of storing a single parent per node, this implementation stores multiple parents when equal-cost paths are found.
+- Each path is reconstructed independently and reversed to obtain the correct order from start to end.
+
+### Multi-path Extension
+
+Unlike standard Dijkstra, this implementation:
+
+- Stores multiple parents for nodes with equal distance
+- Reconstructs multiple optimal paths instead of a single one
+- Limits the number of returned paths for performance reasons
+
+This allows the simulation to distribute drones across different routes and reduce congestion.
 
 ---
 
@@ -275,8 +320,8 @@ If movement is not possible, the drone stays in place.
   - Prevent exceeding capacity
 
 Special cases:
-- The start zone allows all drones initially
-- The end zone can receive multiple drones
+- The start_hub allows all drones unless explicitly limited
+- The end_hub can receive multiple drones
 
 ---
 
@@ -340,12 +385,16 @@ The visualization enhances understanding by:
 ### Dijkstra algorithm:
   - https://www.programiz.com/dsa/dijkstra-algorithm
   - https://www.datacamp.com/tutorial/dijkstra-algorithm-in-python
+  - https://arnaud.jobin.pro/BCPST2/Informatique/TP_10_11_prof.pdf
+  - https://major-prepa.com/python/algorithme-dijkstra/
 ### Plotly documentation:
   - https://plotly.com/python/graph-objects/
+### Deepl
+  - help for english translations
 
 
 
 ### AI Usage
 AI was used for:
 - Answering questions about the visualization. The documentation was quite tricky to catch..
-- Answering question about global informations, as I would do with a teacher. I explicitely ask to not show code to me, except for the visualization, which I was stuck and found no example on internet about what I precisely needed.
+- Answering question about global informations, as I would do with a teacher. I explicitely ask to not show code to me, except for the visualization, with which I was stuck and found no example on internet about what I precisely needed.

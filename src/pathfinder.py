@@ -49,7 +49,6 @@ class Pathfinder:
                 if distance[name_zone] < min_cost:
                     min_cost = distance[name_zone]
                     current_zone = name_zone
-            # aucune zone accessible restante
             if min_cost == float("inf"):
                 break
             for neighbors in self.graph.adjacency_list[current_zone]:
@@ -77,7 +76,7 @@ class Pathfinder:
             index = non_visited.index(current_zone)
             non_visited.pop(index)
         if self.end not in parents and self.end != self.start:
-            raise ValueError("ERROR: map not possible.")
+            raise ValueError("ERROR: no path from start to end.")
         paths = self._build_paths(parents)
         priority_paths = []
         for p in paths:
